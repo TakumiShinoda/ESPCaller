@@ -4,6 +4,7 @@
 
 #include "ServerObject.h"
 #include "ChainArray.h"
+#include "ESPIFFS.h"
 
 #include "local_property.h"
 
@@ -12,6 +13,7 @@
 IPAddress ip(192, 168, 3, 1);
 IPAddress subnet(255, 255, 255, 0);
 ServerObject so;
+ESPIFFS espiffs;
 
 void testCallback(ChainArray params, String *response){
   Serial.println("hoge");
@@ -24,6 +26,11 @@ void setup(){
   WiFi.softAP(APSSID, APPASS);
   WiFi.softAPConfig(ip, ip, subnet);
   WiFi.begin(STASSID, STAPASS);
+
+  if(!espiffs.begin()){
+    Serial.println("ESPIFFS failed"); 
+    return;
+  }
 
   while (WiFi.status() != WL_CONNECTED && cnt < TRY_CONNECT_AP){
     delay(500);
