@@ -19,9 +19,24 @@ void testCallback(ChainArray params, String *response){
 
 void setup(){
   Serial.begin(9600);
+  uint8_t cnt = 0;
   WiFi.mode(WIFI_AP_STA);
   WiFi.softAP(APSSID, APPASS);
   WiFi.softAPConfig(ip, ip, subnet);
+  WiFi.begin(STASSID, STAPASS);
+
+  while (WiFi.status() != WL_CONNECTED && cnt < TRY_CONNECT_AP){
+    delay(500);
+    Serial.print(".");
+    cnt += 1;
+  }
+
+  if(WiFi.status() != WL_CONNECTED){
+    Serial.println("failed");
+    return;
+  }
+  Serial.print("IP: ");
+  Serial.println(WiFi.localIP());
 
   Html test("testetse", testCallback);
 
