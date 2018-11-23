@@ -9,6 +9,7 @@
 #include "Utils.h"
 #include "Html.h"
 
+class Utils;
 class ServerObject{
   private:
     struct Response{
@@ -17,13 +18,14 @@ class ServerObject{
       void (*prevCallback)(ChainArray, String*);
     };
     std::vector<Response> Responses;
+    Utils *utils = new Utils();
+    void sendGetResponse(WiFiClient *client, String html, String status);
 
   public:
     ServerObject();
     void begin();
     void requestHandle();
     void setResponse(String url, Html *response);
-//     void setNotFound(String resp);
 };
 
 // public:

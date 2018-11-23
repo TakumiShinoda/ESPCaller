@@ -13,11 +13,19 @@ IPAddress ip(192, 168, 3, 1);
 IPAddress subnet(255, 255, 255, 0);
 ServerObject so;
 
+void testCallback(ChainArray params, String *response){
+  Serial.println("hoge");
+}
+
 void setup(){
   Serial.begin(9600);
   WiFi.mode(WIFI_AP_STA);
   WiFi.softAP(APSSID, APPASS);
   WiFi.softAPConfig(ip, ip, subnet);
+
+  Html test("testetse", testCallback);
+
+  so.setResponse("/test", &test);
   so.begin();
 }
 

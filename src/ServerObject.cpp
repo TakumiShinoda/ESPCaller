@@ -21,35 +21,38 @@ void ServerObject::setResponse(String url, Html *response){
 
 void ServerObject::requestHandle(){
   WiFiClient client = server.available();
-  Serial.println("waiting");
 
   if(client.connected()){
     Serial.println("available");
     String line = client.readStringUntil('\r');
+    ChainArray analyzed = utils->analyzeGetRequest(line);
+    String path = analyzed.get("path");
+
+    Serial.print("Request: ");
     Serial.println(line);
+    Serial.print("Path: ");
+    Serial.println(path);
 
     if(line.indexOf("GET") >= 0){
-      Serial.println("hoge");
-      client.print("hogehoge");
+      for(int i = 0; i < Responses.size(); i++){
+        if(Responses[i].url == path){
+          sendGetResponse(&client, Responses[i].response, "200");
+        }else if(i == Responses.size() - 1){
+          sendGetResponse(&client, "404", "404");
+        }
+      }
     }
   }
+}
 
-  // WiFiClient client = server.available();
-  // String rstr;
-  // if (client.connected()) {
-  //   Serial.println("Connected to client");
- 
-  //   //コマンド文字列受信（文字列が来なければタイムアウトする）
-  //   rstr = client.readStringUntil('\r');
-  //   Serial.print("[");
-  //   Serial.print(rstr);
-  //   Serial.println("]");
- 
-  //   //応答送信
-  //   client.print("OK\r");
- 
-  //   //接続をクローズ
-  //   client.stop();
-  //   Serial.println("Closed");
-  // }
+void ServerObject::sendGetResponse(WiFiClient *client, String html, String status){
+  String contentLength = String(html.length());
+  String statusResp = "HTTP/1.1 " + status + " OK";
+  String contentLengthResp = "Content-Length: " + contentLength;
+  String connectionResp = "Connection: close";
+  String contentTypeResp = "Content-Type: text/html";
+  String newLine = "\r\n";
+
+  client->print(statusResp + newLine + contentLengthResp + newLine + connectionResp + newLine +contentTypeResp + newLine + newLine + html);
+  client->stop();
 }
