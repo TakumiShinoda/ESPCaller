@@ -19,6 +19,10 @@ void testCallback(ChainArray params, String *response){
   Serial.println("hoge");
 }
 
+void fromESPIFFS(ChainArray params, String *response){
+  *response = espiffs.readFile(*response);
+}
+
 void setup(){
   Serial.begin(9600);
   uint8_t cnt = 0;
@@ -31,10 +35,6 @@ void setup(){
     Serial.println("ESPIFFS failed"); 
     return;
   }
-
-  Serial.println(espiffs.readFile("test.txt"));
-
-  return;
 
   while (WiFi.status() != WL_CONNECTED && cnt < TRY_CONNECT_AP){
     delay(500);
@@ -50,8 +50,10 @@ void setup(){
   Serial.println(WiFi.localIP());
 
   Html test("testetse", testCallback);
+  Html makeTone("/test.txt", fromESPIFFS);
 
   so.setResponse("/test", &test);
+  so.setResponse("/maketone", &makeTone);
   so.begin();
 }
 

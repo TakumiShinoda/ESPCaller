@@ -36,7 +36,10 @@ void ServerObject::requestHandle(){
     if(line.indexOf("GET") >= 0){
       for(int i = 0; i < Responses.size(); i++){
         if(Responses[i].url == path){
-          sendGetResponse(&client, Responses[i].response, "200");
+          String response = Responses[i].response;
+
+          Responses[i].prevCallback(analyzed, &response);
+          sendGetResponse(&client, response, "200");
         }else if(i == Responses.size() - 1){
           sendGetResponse(&client, "404", "404");
         }
