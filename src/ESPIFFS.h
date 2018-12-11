@@ -3,8 +3,9 @@
 
 #include <Arduino.h>
 #include <FS.h>
-// #include <SPIFFS.h>
+#include "Utils.h"
 
+class Utils;
 class ESPIFFS{
   public:
     bool begin();
@@ -14,6 +15,7 @@ class ESPIFFS{
 
   private:
     bool SPIFFSIni = false;
+    Utils *utils = new Utils();
 };
 
 #endif

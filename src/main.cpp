@@ -32,6 +32,10 @@ void setup(){
     return;
   }
 
+  Serial.println(espiffs.readFile("test.txt"));
+
+  return;
+
   while (WiFi.status() != WL_CONNECTED && cnt < TRY_CONNECT_AP){
     delay(500);
     Serial.print(".");

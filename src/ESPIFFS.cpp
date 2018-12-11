@@ -8,7 +8,7 @@ bool ESPIFFS::begin(){
 String ESPIFFS::readFile(String path){ 
   if(!SPIFFSIni) return "";
 
-  File file = SPIFFS.open(path, "r");
+  File file = SPIFFS.open(utils->fixPath(path), "r");
   String result = "";
   
   if (!file){
@@ -25,7 +25,7 @@ String ESPIFFS::readFile(String path){
 bool ESPIFFS::writeFile(String path, String value){
   if(!SPIFFSIni) return false;
 
-  File file = SPIFFS.open(path, "r");
+  File file = SPIFFS.open(utils->fixPath(path), "r");
 
   if(!file){
     file = SPIFFS.open(path, "a");
