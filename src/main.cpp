@@ -5,6 +5,7 @@
 #include "ServerObject.h"
 #include "ChainArray.h"
 #include "ESPIFFS.h"
+#include "Musica.h"
 
 #include "local_property.h"
 
@@ -14,6 +15,7 @@ IPAddress ip(192, 168, 3, 1);
 IPAddress subnet(255, 255, 255, 0);
 ServerObject so;
 ESPIFFS espiffs;
+Musica famima(16);
 
 void testCallback(ChainArray params, String *response){
   Serial.println("hoge");
@@ -24,6 +26,14 @@ void fromESPIFFS(ChainArray params, String *response){
 }
 
 void setup(){
+  famima.addMelody(
+    {F6S, D6, A5, D6, E6, A6, A6, E6, F6S, E6, A5, D6},
+    {125, 125, 125, 125, 125, 250, 125, 125, 125, 125, 125, 125}
+  );
+
+  famima.play();
+  return;
+
   Serial.begin(9600);
   uint8_t cnt = 0;
   WiFi.mode(WIFI_AP_STA);
