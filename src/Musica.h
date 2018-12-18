@@ -29,6 +29,11 @@
 #define A6 1760
 #define B6 1976
 
+#define DIV8 125
+#define DIV4 250
+#define DIV2 500
+#define NUT 1000
+
 class Musica{
   private:
     uint8_t Pin;
