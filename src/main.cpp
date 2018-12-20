@@ -18,7 +18,7 @@ ESPIFFS espiffs;
 Musica famima(12);
 
 void testCallback(ChainArray params, String *response){
-  famima.play();
+  // famima.play();
 }
 
 void fromESPIFFS(ChainArray params, String *response){
@@ -66,4 +66,5 @@ void setup(){
 
 void loop(){
   so.requestHandle();
+  delay(100);
 }

@@ -2,12 +2,17 @@
 #define ServerObject_h
 
 #include <Arduino.h>
+#include <WiFiClient.h>
 #include <ESP8266WiFi.h>
 #include <vector>
 
 #include "ChainArray.h"
 #include "Utils.h"
 #include "Html.h"
+
+#define RESPTYPE_HTML "text/html"
+#define RESPTYPE_JSON "application/json"
+#define RESPTYPE_CSV "text/csv"
 
 class Utils;
 class ServerObject{
