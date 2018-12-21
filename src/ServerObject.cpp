@@ -41,17 +41,21 @@ void ServerObject::requestHandle(){
         Serial.print("Path: ");
         Serial.println(path);
 
-        for(int i = 0; i < Responses.size(); i++){
-          if(Responses[i].url == path){
-            String response = Responses[i].response;
+        if(Responses.size() == 0){
+          sendGetResponse(&client, "404", "404");
+        }else{
+          for(int i = 0; i < Responses.size(); i++){
+            if(Responses[i].url == path){
+              String response = Responses[i].response;
 
-            Responses[i].prevCallback(analyzed, &response);
-            sendGetResponse(&client, response, "200");
+              Responses[i].prevCallback(analyzed, &response);
+              sendGetResponse(&client, response, "200");
 
-            break;
-          }else if(i == Responses.size() - 1){
-            sendGetResponse(&client, "404", "404");
-            break;
+              break;
+            }else if(i == Responses.size() - 1){
+              sendGetResponse(&client, "404", "404");
+              break;
+            }
           }
         }
         client.disableKeepAlive();
