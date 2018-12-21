@@ -2,7 +2,7 @@
 #define Utils_h
 
 #include <Arduino.h>
-#include <array>
+#include <ESP8266WiFi.h>
 #include <vector>
 #include "ChainArray.h"
 
@@ -14,6 +14,7 @@ class Utils{
     std::vector<uint8_t> vector_find(std::vector<String> target, String str);
     String ints2utf8(std::vector<uint8_t> data);
     String fixPath(String path);
+    String getMAC();
 };
 
 #endif
