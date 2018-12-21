@@ -11,9 +11,9 @@
 
 #include "local_property.h"
 
-#define DEVICE_MODE_REC 0
+#define DEVICE_MODE_RECV 0
 #define DEVICE_MODE_SEND 1
-#define DEVICE_MODE DEVICE_MODE_SEND 
+#define DEVICE_MODE DEVICE_MODE_SEND
 
 #define TRY_CONNECT_AP 10
 #define BUTA 13
@@ -36,7 +36,7 @@ void fromESPIFFS(ChainArray params, String *response){
   *response = espiffs.readFile(*response);
 }
 
-String getRequest(char host[]) {
+String getRequest(String host) {
   HTTPClient http;
 
   http.begin(host);
@@ -90,7 +90,7 @@ void setup(){
   Serial.print("IP: ");
   Serial.println(WiFi.localIP());
 
-  if(DEVICE_MODE == DEVICE_MODE_REC){
+  if(DEVICE_MODE == DEVICE_MODE_RECV){
     Html test("testetse", testCallback);
     Html makeTone("/test.txt", fromESPIFFS);
 
@@ -111,7 +111,7 @@ void loop(){
 
   if(DEVICE_MODE == DEVICE_MODE_SEND){
     if(!digitalRead(BUTA)){
-      Serial.println(getRequest("http://hogehoge.com"));
+      Serial.println(getRequest("http://" + RECV_IP + "/test"));
       // Serial.println("BUTA");
     }else if(!digitalRead(BUTB)){
       Serial.println("BUTB");
