@@ -13,7 +13,7 @@
 
 #define DEVICE_MODE_RECV 0
 #define DEVICE_MODE_SEND 1
-#define DEVICE_MODE DEVICE_MODE_SEND
+#define DEVICE_MODE DEVICE_MODE_RECV
 
 #define TRY_CONNECT_AP 10
 #define BUTA 13
@@ -21,11 +21,17 @@
 #define BUTC 14
 #define BUTD 4
 
+#define STATUS_LED_PIN 16
+#define SOUND_PIN 12
+#define LED_R_PIN 13
+#define LED_B_PIN 12
+#define LED_G_PIN 14
+
 IPAddress ip(192, 168, 3, 1);
 IPAddress subnet(255, 255, 255, 0);
 ServerObject so;
 ESPIFFS espiffs;
-Musica famima(12);
+Musica famima(SOUND_PIN);
 Utils utils;
 
 void testCallback(ChainArray params, String *response){
@@ -59,6 +65,7 @@ String getRequest(String host) {
 void setup(){
   uint8_t cnt = 0;
 
+  pinMode(STATUS_LED_PIN, OUTPUT);
   WiFi.mode(WIFI_AP_STA);
   WiFi.softAP(APSSID, APPASS);
   WiFi.softAPConfig(ip, ip, subnet);
@@ -77,14 +84,20 @@ void setup(){
   }
 
   while (WiFi.status() != WL_CONNECTED && cnt < TRY_CONNECT_AP){
-    delay(500);
     Serial.print(".");
+    digitalWrite(STATUS_LED_PIN, LOW);
     cnt += 1;
+    delay(500);
+    digitalWrite(STATUS_LED_PIN, HIGH);
+    delay(50);
   }
 
   if(WiFi.status() != WL_CONNECTED){
     Serial.println("failed");
+    digitalWrite(STATUS_LED_PIN, LOW);
     return;
+  }else{
+    digitalWrite(STATUS_LED_PIN, HIGH);
   }
 
   Serial.print("IP: ");
@@ -93,6 +106,13 @@ void setup(){
   if(DEVICE_MODE == DEVICE_MODE_RECV){
     Html test("testetse", testCallback);
     Html makeTone("/test.txt", fromESPIFFS);
+
+    pinMode(LED_R_PIN, OUTPUT);
+    pinMode(LED_G_PIN, OUTPUT);
+    pinMode(LED_B_PIN, OUTPUT);
+    digitalWrite(LED_R_PIN, LOW);
+    digitalWrite(LED_G_PIN, LOW);
+    digitalWrite(LED_B_PIN, LOW);
 
     so.setResponse("/test", &test);
     so.setResponse("/maketone", &makeTone);
@@ -112,7 +132,6 @@ void loop(){
   if(DEVICE_MODE == DEVICE_MODE_SEND){
     if(!digitalRead(BUTA)){
       Serial.println(getRequest("http://" + RECV_IP + "/test"));
-      // Serial.println("BUTA");
     }else if(!digitalRead(BUTB)){
       Serial.println("BUTB");
     }else if(!digitalRead(BUTC)){
