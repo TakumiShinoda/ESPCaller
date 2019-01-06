@@ -7,6 +7,7 @@
 #include "ChainArray.h"
 #include "ESPIFFS.h"
 #include "Musica.h"
+#include "Fled.h"
 #include "Utils.h"
 
 #include "local_property.h"
@@ -22,7 +23,7 @@
 #define BUTD 4
 
 #define STATUS_LED_PIN 16
-#define SOUND_PIN 12
+#define SOUND_PIN 5
 #define LED_R_PIN 13
 #define LED_B_PIN 12
 #define LED_G_PIN 14
@@ -32,10 +33,14 @@ IPAddress subnet(255, 255, 255, 0);
 ServerObject so;
 ESPIFFS espiffs;
 Musica famima(SOUND_PIN);
+Fled recvNotifyLed(LED_R_PIN, LED_G_PIN, LED_B_PIN, true);
 Utils utils;
 
 void testCallback(ChainArray params, String *response){
+  recvNotifyLed.White();
+  delay(1000);
   famima.play();
+  recvNotifyLed.off();
 }
 
 void fromESPIFFS(ChainArray params, String *response){
@@ -106,13 +111,6 @@ void setup(){
   if(DEVICE_MODE == DEVICE_MODE_RECV){
     Html test("testetse", testCallback);
     Html makeTone("/test.txt", fromESPIFFS);
-
-    pinMode(LED_R_PIN, OUTPUT);
-    pinMode(LED_G_PIN, OUTPUT);
-    pinMode(LED_B_PIN, OUTPUT);
-    digitalWrite(LED_R_PIN, LOW);
-    digitalWrite(LED_G_PIN, LOW);
-    digitalWrite(LED_B_PIN, LOW);
 
     so.setResponse("/test", &test);
     so.setResponse("/maketone", &makeTone);
