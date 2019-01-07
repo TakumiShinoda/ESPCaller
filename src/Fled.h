@@ -17,6 +17,7 @@ class Fled{
     void Green();
     void Blue();
     void White();
+    void Yellow();
 };
 
 #endif

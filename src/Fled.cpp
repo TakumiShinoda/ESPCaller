@@ -35,7 +35,13 @@ void Fled::Blue(){
 
 void Fled::White(){
   off();
-  digitalWrite(r, On);
+  analogWrite(r, 150);
   digitalWrite(g, On);
   digitalWrite(b, On);
+}
+
+void Fled::Yellow(){
+  off();
+  analogWrite(r, 150);
+  digitalWrite(g, On);
 }

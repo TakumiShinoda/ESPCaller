@@ -24,6 +24,7 @@
 
 #define STATUS_LED_PIN 16
 #define SOUND_PIN 5
+#define VIB_PIN 4
 #define LED_R_PIN 13
 #define LED_B_PIN 12
 #define LED_G_PIN 14
@@ -36,11 +37,40 @@ Musica famima(SOUND_PIN);
 Fled recvNotifyLed(LED_R_PIN, LED_G_PIN, LED_B_PIN, true);
 Utils utils;
 
-void testCallback(ChainArray params, String *response){
-  recvNotifyLed.White();
-  delay(1000);
+void RedCallback(ChainArray params, String *response){
+  recvNotifyLed.Red();
+  digitalWrite(VIB_PIN, HIGH);
   famima.play();
+  delay(1000);
   recvNotifyLed.off();
+  digitalWrite(VIB_PIN, LOW);
+}
+
+void YellowCallback(ChainArray params, String *response){
+  recvNotifyLed.Yellow();
+  digitalWrite(VIB_PIN, HIGH);
+  famima.play();
+  delay(1000);
+  recvNotifyLed.off();
+  digitalWrite(VIB_PIN, LOW);
+}
+
+void GreenCallback(ChainArray params, String *response){
+  recvNotifyLed.Green();
+  digitalWrite(VIB_PIN, HIGH);
+  famima.play();
+  delay(1000);
+  recvNotifyLed.off();
+  digitalWrite(VIB_PIN, LOW);
+}
+
+void WhiteCallback(ChainArray params, String *response){
+  recvNotifyLed.White();
+  digitalWrite(VIB_PIN, HIGH);
+  famima.play();
+  delay(1000);
+  recvNotifyLed.off();
+  digitalWrite(VIB_PIN, LOW);
 }
 
 void fromESPIFFS(ChainArray params, String *response){
@@ -109,10 +139,17 @@ void setup(){
   Serial.println(WiFi.localIP());
 
   if(DEVICE_MODE == DEVICE_MODE_RECV){
-    Html test("testetse", testCallback);
+    Html RedCall("Notified Red", RedCallback);
+    Html YellowCall("Notified Yellow", YellowCallback);
+    Html GreenCall("Notified White", GreenCallback);
+    Html WhiteCall("Notified Green", WhiteCallback);
     Html makeTone("/test.txt", fromESPIFFS);
 
-    so.setResponse("/test", &test);
+    pinMode(VIB_PIN, OUTPUT);
+    so.setResponse("/redcall", &RedCall);
+    so.setResponse("/yellowcall", &YellowCall);
+    so.setResponse("/greencall", &GreenCall);
+    so.setResponse("/whitecall", &WhiteCall);
     so.setResponse("/maketone", &makeTone);
   }else if(DEVICE_MODE == DEVICE_MODE_SEND){
     pinMode(BUTA, INPUT);
