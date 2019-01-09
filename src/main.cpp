@@ -14,7 +14,7 @@
 
 #define DEVICE_MODE_RECV 0
 #define DEVICE_MODE_SEND 1
-#define DEVICE_MODE DEVICE_MODE_RECV
+#define DEVICE_MODE DEVICE_MODE_SEND
 
 #define TRY_CONNECT_AP 10
 #define BUTA 13
@@ -166,13 +166,13 @@ void loop(){
 
   if(DEVICE_MODE == DEVICE_MODE_SEND){
     if(!digitalRead(BUTA)){
-      Serial.println(getRequest("http://" + RECV_IP + "/test"));
+      Serial.println(getRequest("http://" + RECV_IP + "/greencall"));
     }else if(!digitalRead(BUTB)){
-      Serial.println("BUTB");
+      Serial.println(getRequest("http://" + RECV_IP + "/yellowcall"));
     }else if(!digitalRead(BUTC)){
-      Serial.println("BUTC");
+      Serial.println(getRequest("http://" + RECV_IP + "/whitecall"));
     }else if(!digitalRead(BUTD)){
-      Serial.println("BUTD");
+      Serial.println(getRequest("http://" + RECV_IP + "/redcall"));
     }
   }
 }
